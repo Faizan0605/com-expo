@@ -4,6 +4,7 @@ import RTE from "@/components/RTE";
 import { Meteors } from "@/components/ui/meteors";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/lib/utils";
 import slugify from "@/utils/slugify";
@@ -13,7 +14,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { databases, storage } from "@/models/client/config";
 import { db, questionAttachmentBucket, questionCollection } from "@/models/name";
-import { QuestionDocument } from "@/models";
+import { QuestionDocument } from "@/models/index";
 import confetti from "canvas-confetti";
 
 
@@ -37,11 +38,7 @@ const LabelInputContainer = ({
     );
 };
 
-/**
- * ******************************************************************************
- * ![INFO]: for buttons, refer to https://ui.aceternity.com/components/tailwindcss-buttons
- * ******************************************************************************
- */
+
 const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
     const { user } = useAuthStore();
     const [tag, setTag] = React.useState("");
@@ -120,9 +117,6 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
             if (question.attachmentId) {
                 await storage.deleteFile(questionAttachmentBucket, question.attachmentId);
             }
-            // await storage.deleteFile(questionAttachmentBucket, question.attachmentId!);
-
-
             const file = await storage.createFile(
                 questionAttachmentBucket,
                 ID.unique(),

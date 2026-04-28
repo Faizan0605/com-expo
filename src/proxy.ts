@@ -1,10 +1,12 @@
+//this file is just for get or creating db and storage in appwrite
+
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 
 import getOrCreateDB from './models/server/dbSetup'
 import fetOrCreateStorage from './models/server/storageSetup'
 
-export async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) { 
     await Promise.all([
         getOrCreateDB(),
         fetOrCreateStorage(),
