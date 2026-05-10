@@ -8,6 +8,7 @@ import { IconCaretUpFilled, IconCaretDownFilled } from "@tabler/icons-react";
 import { ID, Models, Query } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { VoteDocument } from "@/models";
 
 const VoteButtons = ({
     type,
@@ -18,11 +19,11 @@ const VoteButtons = ({
 }: {
     type: "question" | "answer";
     id: string;
-    upvotes: Models.DocumentList<Models.Document>;
-    downvotes: Models.DocumentList<Models.Document>;
+    upvotes: Models.DocumentList<VoteDocument>;    // ✅
+    downvotes: Models.DocumentList<VoteDocument>;  // ✅
     className?: string;
 }) => {
-    const [votedDocument, setVotedDocument] = React.useState<Models.Document | null>(); // undefined means not fetched yet
+    const [votedDocument, setVotedDocument] = React.useState<VoteDocument | null>(); 
     const [voteResult, setVoteResult] = React.useState<number>(upvotes.total - downvotes.total);
 
     const { user } = useAuthStore();
@@ -36,7 +37,7 @@ const VoteButtons = ({
                     Query.equal("typeId", id),
                     Query.equal("votedById", user.$id),
                 ]);
-                setVotedDocument(() => response.documents[0] || null);
+                setVotedDocument((response.documents[0] as unknown as VoteDocument) || null); 
             }
         })();
     }, [user, id, type]);
