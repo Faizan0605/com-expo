@@ -17,6 +17,15 @@ export type CommentDocument = Models.Document & {
   authorId: string;
 };
 
+export type Comment = Models.Document & {
+    content: string;
+    authorId: string;
+    author: {
+        name: string;
+        $id: string;
+    };
+};
+
 export type AnswerDocument = Models.Document & {
   content: string;
   authorId: string;

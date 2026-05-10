@@ -10,15 +10,9 @@ import { IconTrash } from "@tabler/icons-react";
 import { ID, Models } from "appwrite";
 import Link from "next/link";
 import React from "react";
+import { CommentWithAuthor } from "@/models";
 
-type Comment = Models.Document & {
-    content: string;
-    authorId: string;
-    author: {
-        name: string;
-        $id: string;
-    };
-};
+
 
 const Comments = ({
     comments: _comments,
@@ -26,12 +20,12 @@ const Comments = ({
     typeId,
     className,
 }: {
-    comments: Models.DocumentList<Comment>; 
+    comments: Models.DocumentList<CommentWithAuthor>;
     type: "question" | "answer";
     typeId: string;
     className?: string;
 }) => {
-    const [comments, setComments] = React.useState(_comments);
+    const [comments, setComments] = React.useState<Models.DocumentList<CommentWithAuthor>>(_comments);
     const [newComment, setNewComment] = React.useState("");
     const { user } = useAuthStore();
 
@@ -49,9 +43,18 @@ const Comments = ({
 
             setNewComment("");
             setComments(prev => ({
-            total: prev.total + 1,
-            documents: [{ ...response, author: user } as unknown as Comment, ...prev.documents],
-        }));
+                total: prev.total + 1,
+                documents: [{
+                    ...response,
+                    content: newComment,
+                    authorId: user.$id,
+                    author: {
+                        name: user.name,
+                        $id: user.$id,
+                        reputation: user.prefs.reputation  // PublicUser requires this
+                    }
+                } as unknown as CommentWithAuthor, ...prev.documents],
+            }));
         } catch (error: any) {
             window.alert(error?.message || "Error creating comment");
         }

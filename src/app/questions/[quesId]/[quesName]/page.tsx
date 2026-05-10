@@ -26,6 +26,8 @@ import React from "react";
 import DeleteQuestion from "./DeleteQuestion";
 import EditQuestion from "./EditQuestion";
 import { TracingBeam } from "@/components/ui/tracing-beam";
+import { CommentWithAuthor } from "@/models"; 
+import { Models } from "appwrite";
 
 const toPlain = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 
@@ -233,7 +235,7 @@ const Page = async ({
                             </div>
                         </div>
                         <Comments
-                            comments={plainComments}
+                            comments={plainComments as unknown as Models.DocumentList<CommentWithAuthor>}
                             className="mt-4"
                             type="question"
                             typeId={plainQuestion.$id}
