@@ -2,8 +2,8 @@ import Answers from "@/components/Answers";
 import Comments from "@/components/Comments";
 import { MarkdownPreview } from "@/components/RTE";
 import VoteButtons from "@/components/VoteButtons";
-import {Particles} from "@/components/ui/particles";
-import {ShimmerButton} from "@/components/ui/shimmer-button";
+import { Particles } from "@/components/ui/particles";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Meteors } from "@/components/ui/meteors";
 import { avatars } from "@/models/client/config";
 import {
@@ -26,8 +26,9 @@ import React from "react";
 import DeleteQuestion from "./DeleteQuestion";
 import EditQuestion from "./EditQuestion";
 import { TracingBeam } from "@/components/ui/tracing-beam";
-import { CommentWithAuthor } from "@/models"; 
+import { CommentWithAuthor } from "@/models";
 import { Models } from "appwrite";
+import { VoteDocument } from "@/models";
 
 const toPlain = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 
@@ -176,8 +177,8 @@ const Page = async ({
                             type="question"
                             id={plainQuestion.$id}
                             className="w-full"
-                            upvotes={plainUpvotes}
-                            downvotes={plainDownvotes}
+                            upvotes={plainUpvotes as unknown as Models.DocumentList<VoteDocument>}    // ✅
+                            downvotes={plainDownvotes as unknown as Models.DocumentList<VoteDocument>} // ✅
                         />
                         <EditQuestion
                             questionId={plainQuestion.$id}
