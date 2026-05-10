@@ -1,42 +1,127 @@
+# Com Expo
 
-# com-expo
-A community-driven platform to expose and report fake job and employment scams.
+Com Expo is a community reporting platform built to expose scam companies, fake job offers, and suspicious businesses before more people get harmed. Users can publish reports, attach evidence, discuss cases publicly, and upvote or downvote contributions.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## What It Does
+
+- Public landing page for the platform
+- User registration and login with Appwrite Auth
+- Create, edit, and browse question-style scam reports
+- Rich text report body with optional image attachments
+- Tag-based organization and search
+- Answer threads for follow-up discussion
+- Voting system for questions and answers
+- Reputation tracking tied to community activity
+- User profile pages for questions, answers, and votes
+- Pagination for the questions feed
+
+## Tech Stack
+
+- Next.js 16 with the App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Appwrite and Node Appwrite
+- Zustand for client auth state
+- shadcn/ui style components and custom animated UI pieces
+
+## Main Routes
+
+- `/` - landing page
+- `/questions` - all reports/questions
+- `/questions/ask` - create a new report
+- `/questions/[quesId]/[quesName]` - single report page
+- `/questions/[quesId]/[quesName]/edit` - edit report
+- `/login` - sign in
+- `/register` - create account
+- `/users/[userId]/[userSlug]` - user profile
+- `/users/[userId]/[userSlug]/questions` - user questions
+- `/users/[userId]/[userSlug]/answers` - user answers
+- `/users/[userId]/[userSlug]/votes` - user votes
+
+## Project Structure
+
+```text
+src/
+  app/                  Next.js routes, layouts, and API handlers
+  components/           Reusable UI and feature components
+  models/               Appwrite client/server configuration and model names
+  store/                Zustand auth store
+  utils/                Utility helpers like slug and time formatting
+public/                 Static assets
+```
+
+## Environment Variables
+
+Create a `.env` file in the project root with these values:
+
+```env
+NEXT_PUBLIC_APPWRITE_ENDPOINT=
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=
+NEXT_PUBLIC_APPWRITE_API_KEY=
+```
+
+## Appwrite Requirements
+
+This project expects an Appwrite setup with:
+
+- A project connected to the values above
+- A database with id `main-stackflow`
+- Collections:
+  - `questions`
+  - `answers`
+  - `comments`
+  - `votes`
+- A storage bucket with id `question-attachments`
+
+You will also need the matching document attributes and permissions configured in Appwrite for auth, questions, answers, voting, and attachments to work correctly.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-## Learn More
+## API Endpoints
 
-To learn more about Next.js, take a look at the following resources:
+- `POST /api/answer` - create an answer
+- `DELETE /api/answer` - delete an answer
+- `POST /api/vote` - add, change, or remove a vote
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Authentication state is persisted on the client with Zustand.
+- Question creation supports optional image uploads.
+- Reputation is updated when users post answers or receive votes.
+- The current repository still includes some internal naming around `Riverflow` and `stackflow` from earlier development.
 
-## Deploy on Vercel
+## Future Improvements
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Add a clear Appwrite schema export or setup guide
+- Add role-based moderation tools
+- Add reporting workflows for abusive or duplicate posts
+- Add tests for API routes and core user flows
+- Add deployment instructions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
 
-
+Add your preferred license here before publishing publicly.

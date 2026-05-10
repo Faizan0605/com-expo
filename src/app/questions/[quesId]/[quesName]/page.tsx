@@ -139,19 +139,23 @@ const Page = async ({
     const plainComments = toPlain(comments);
 
     return (
-        <TracingBeam className="container pl-6">
-            <Particles
-                className="fixed inset-0 z-0 h-full w-full"
-                quantity={500}
-                ease={100}
-                color="#ffffff"
-                refresh
-            />
-            <div className="relative mx-auto overflow-hidden px-4 pb-20 pt-36">
-                <div className="pointer-events-none absolute inset-0 z-0">
-                    <Meteors number={24} className="opacity-60" />
-                </div>
-                <div className="flex">
+        <div className="relative isolate min-h-screen overflow-hidden bg-black">
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_40%),linear-gradient(180deg,_rgba(10,10,10,0.98),_rgba(0,0,0,1))]" />
+                <Particles
+                    className="fixed inset-0 z-0 h-full w-full"
+                    quantity={120}
+                    ease={100}
+                    color="#ffffff"
+                    refresh
+                />
+            </div>
+            <TracingBeam className="container relative z-10 pl-6">
+                <div className="relative mx-auto overflow-hidden px-4 pb-20 pt-36">
+                    <div className="pointer-events-none absolute inset-0 z-0">
+                        <Meteors number={24} className="opacity-60" />
+                    </div>
+                    <div className="flex">
                     <div className="w-full">
                         <h1 className="mb-1 text-3xl font-bold">{plainQuestion.title}</h1>
                         <div className="flex gap-4 text-sm">
@@ -169,9 +173,9 @@ const Page = async ({
                             </span>
                         </ShimmerButton>
                     </Link>
-                </div>
-                <hr className="relative z-10 my-4 border-white/40" />
-                <div className="relative z-10 flex gap-4">
+                    </div>
+                    <hr className="relative z-10 my-4 border-white/40" />
+                    <div className="relative z-10 flex gap-4">
                     <div className="flex shrink-0 flex-col items-center gap-4">
                         <VoteButtons
                             type="question"
@@ -244,11 +248,12 @@ const Page = async ({
                         <hr className="my-4 border-white/40" />
                     </div>
                 </div>
-                <div className="relative z-10">
-                    <Answers answers={plainAnswers} questionId={plainQuestion.$id} />
+                    <div className="relative z-10">
+                        <Answers answers={plainAnswers} questionId={plainQuestion.$id} />
+                    </div>
                 </div>
-            </div>
-        </TracingBeam>
+            </TracingBeam>
+        </div>
     );
 };
 

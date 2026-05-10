@@ -4,13 +4,13 @@ import { databases } from "@/models/client/config";
 import { commentCollection, db } from "@/models/name";
 import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/lib/utils"
-import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
 import { IconTrash } from "@tabler/icons-react";
 import { ID, Models } from "appwrite";
 import Link from "next/link";
 import React from "react";
 import { CommentWithAuthor } from "@/models";
+import ClientRelativeTime from "./ClientRelativeTime";
 
 
 
@@ -87,9 +87,10 @@ const Comments = ({
                             >
                                 {comment.author.name}
                             </Link>{" "}
-                            <span className="opacity-60">
-                                {convertDateToRelativeTime(new Date(comment.$createdAt))}
-                            </span>
+                            <ClientRelativeTime
+                                date={comment.$createdAt}
+                                className="opacity-60"
+                            />
                         </p>
                         {user?.$id === comment.authorId ? (
                             <button

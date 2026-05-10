@@ -3,11 +3,10 @@
 import React from "react";
 import { BorderBeam } from "./ui/border-beam";
 import Link from "next/link";
-import { Models } from "appwrite";
 import slugify from "@/utils/slugify";
 import { avatars } from "@/models/client/config";
-import convertDateToRelativeTime from "@/utils/relativeTime";
 import { QuestionDocument } from "@/models";
+import ClientRelativeTime from "./ClientRelativeTime";
 
 const QuestionCard = ({ ques }: { ques: QuestionDocument }) => {
     const [height, setHeight] = React.useState(0);
@@ -62,7 +61,7 @@ const QuestionCard = ({ ques }: { ques: QuestionDocument }) => {
                         </Link>
                         <strong>&quot;{ques.author.reputation}&quot;</strong>
                     </div>
-                    <span>asked {convertDateToRelativeTime(new Date(ques.$createdAt))}</span>
+                    <ClientRelativeTime date={ques.$createdAt} prefix="asked " />
                 </div>
             </div>
         </div>

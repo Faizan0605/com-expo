@@ -11,15 +11,17 @@ const Page = async ({
     params,
     searchParams,
 }: {
-    params: { userId: string; userSlug: string };
-    searchParams: { page?: string };
+    params: Promise<{ userId: string; userSlug: string }>;
+    searchParams: Promise<{ page?: string }>;
 }) => {
-    searchParams.page ||= "1";
+    const { userId } = await params;
+    const resolvedSearchParams = await searchParams;
+    const currentPage = resolvedSearchParams.page || "1";
 
     const queries = [
-        Query.equal("authorId", params.userId),
+        Query.equal("authorId", userId),
         Query.orderDesc("$createdAt"),
-        Query.offset((+searchParams.page - 1) * 25),
+        Query.offset((+currentPage - 1) * 25),
         Query.limit(25),
     ];
 
@@ -35,26 +37,40 @@ const Page = async ({
     );
 
     return (
-        <div className="px-4">
-            <div className="mb-4">
-                <p>{answers.total} answers</p>
+        <div className="space-y-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p className="text-sm uppercase tracking-[0.28em] text-slate-400">
+                        Contributions
+                    </p>
+                    <h2 className="mt-2 text-2xl font-semibold text-white">Answers</h2>
+                </div>
+                <p className="text-sm text-slate-300">{answers.total} answers</p>
             </div>
-            <div className="mb-4 max-w-3xl space-y-6">
+
+            <div className="space-y-5">
                 {answers.documents.map(ans => (
-                    <div key={ans.$id}>
-                        <div className="max-h-40 overflow-auto">
-                            <MarkdownPreview source={ans.content} className="rounded-lg p-4" />
+                    <div
+                        key={ans.$id}
+                        className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.2)]"
+                    >
+                        <div className="max-h-48 overflow-auto rounded-2xl border border-white/8 bg-black/20 p-1">
+                            <MarkdownPreview
+                                source={ans.content}
+                                className="rounded-xl bg-transparent p-4 text-slate-200"
+                            />
                         </div>
                         <Link
                             href={`/questions/${ans.questionId}/${slugify(ans.question.title)}`}
-                            className="mt-3 inline-block shrink-0 rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-600"
+                            className="mt-4 inline-flex shrink-0 rounded-full border border-amber-300/35 bg-amber-200/10 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-200/20"
                         >
-                            Question
+                            Open question
                         </Link>
                     </div>
                 ))}
             </div>
-            <Pagination total={answers.total} limit={25} />
+
+            <Pagination total={answers.total} limit={25} className="text-slate-200" />
         </div>
     );
 };
