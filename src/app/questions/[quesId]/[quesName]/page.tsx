@@ -16,6 +16,7 @@ import {
 } from "@/models/name";
 import { databases, users } from "@/models/server/config";
 import { storage } from "@/models/client/config";
+import { AnswerDocumentList } from "@/models";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
@@ -129,7 +130,7 @@ const Page = async ({
     ]);
 
     const plainQuestion = toPlain(question);
-    const plainAnswers = toPlain(answers);
+    const plainAnswers = toPlain(answers as unknown as AnswerDocumentList);
     const plainUpvotes = toPlain(upvotes);
     const plainDownvotes = toPlain(downvotes);
     const plainComments = toPlain(comments);
@@ -191,14 +192,12 @@ const Page = async ({
                         {plainQuestion.attachmentId ? (
                             <picture>
                                 <img
-                                    src={
-                                        storage.getFilePreview(
-                                            questionAttachmentBucket,
-                                            plainQuestion.attachmentId
-                                        )
-                                    }
+                                    src={storage.getFileView({
+                                        bucketId: questionAttachmentBucket,
+                                        fileId: plainQuestion.attachmentId,
+                                    })}
                                     alt={plainQuestion.title}
-                                    className="mt-3 rounded-lg"
+                                    className="mt-3 rounded-lg h-45"
                                 />
                             </picture>
                         ) : null}

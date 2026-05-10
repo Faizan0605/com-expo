@@ -146,8 +146,8 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
             return;
         }
 
-        if (formData.content.trim().length < 20) {
-            setError(() => "Please describe your problem in at least 20 characters");
+        if (formData.content.trim().length < 10) {
+            setError(() => "Please describe your problem in at least 10 characters");
             return;
         }
 

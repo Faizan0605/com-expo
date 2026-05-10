@@ -1,10 +1,12 @@
 export default function convertDateToRelativeTime(date: Date) {
+  // Return an empty label when the input cannot be parsed into a valid date.
   if (date.toString().toLowerCase() === "invalid date") return "";
 
   const now = new Date();
   const timeDifferenceInMiliSeconds = now.getTime() - date.getTime();
 
   const seconds = Math.floor(timeDifferenceInMiliSeconds / 1000);
+  // Treat very recent timestamps as "Just now" instead of showing seconds.
   if (seconds < 10) {
       return `Just now`;
   }
@@ -23,6 +25,7 @@ export default function convertDateToRelativeTime(date: Date) {
   }
 
   const days = Math.floor(hours / 24);
+  // Keep day-based output for roughly the first month.
   if (days < 30) {
       return `${days} day${days !== 1 ? "s" : ""} ago`;
   }

@@ -1,5 +1,6 @@
 //this file is for type exports
 import { Models } from "appwrite";
+import { UserPrefs } from "@/store/Auth";
 
 export type QuestionDocument = Models.Document & {
   title: string;
@@ -28,3 +29,20 @@ export type VoteDocument = Models.Document & {
   typeId: string;
   votedById: string;
 };
+
+export type PublicUser = Pick<Models.User<UserPrefs>, "$id" | "name"> & {
+  reputation: number;
+};
+
+export type CommentWithAuthor = CommentDocument & {
+  author: PublicUser;
+};
+
+export type AnswerWithRelations = AnswerDocument & {
+  author: PublicUser;
+  comments: Models.DocumentList<CommentWithAuthor>;
+  upvotesDocuments: Models.DocumentList<VoteDocument>;
+  downvotesDocuments: Models.DocumentList<VoteDocument>;
+};
+
+export type AnswerDocumentList = Models.DocumentList<AnswerWithRelations>;

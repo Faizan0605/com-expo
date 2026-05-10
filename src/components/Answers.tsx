@@ -1,25 +1,23 @@
 "use client";
-
-import { ID, Models } from "appwrite";
 import React from "react";
 import VoteButtons from "./VoteButtons";
 import { useAuthStore } from "@/store/Auth";
-import { avatars, databases } from "@/models/client/config";
-import { answerCollection, db } from "@/models/name";
+import { avatars } from "@/models/client/config";
 import RTE, { MarkdownPreview } from "./RTE";
 import Comments from "./Comments";
 import slugify from "@/utils/slugify";
 import Link from "next/link";
 import { IconTrash } from "@tabler/icons-react";
+import { AnswerDocumentList } from "@/models/index";
 
 const Answers = ({
     answers: _answers,
     questionId,
 }: {
-    answers: Models.DocumentList<Models.Document>;
+    answers: AnswerDocumentList;
     questionId: string;
 }) => {
-    const [answers, setAnswers] = React.useState(_answers);
+    const [answers, setAnswers] = React.useState<AnswerDocumentList>(_answers);
     const [newAnswer, setNewAnswer] = React.useState("");
     const { user } = useAuthStore();
 
@@ -47,7 +45,11 @@ const Answers = ({
                 documents: [
                     {
                         ...data,
-                        author: user,
+                        author: {
+                            $id: user.$id,
+                            name: user.name,
+                            reputation: user.prefs.reputation,
+                        },
                         upvotesDocuments: { documents: [], total: 0 },
                         downvotesDocuments: { documents: [], total: 0 },
                         comments: { documents: [], total: 0 },
@@ -108,7 +110,7 @@ const Answers = ({
                         <div className="mt-4 flex items-center justify-end gap-1">
                             <picture>
                                 <img
-                                    src={avatars.getInitials(answer.author.name, 36, 36).href}
+                                    src={avatars.getInitials(answer.author.name, 36, 36)}
                                     alt={answer.author.name}
                                     className="rounded-lg"
                                 />
