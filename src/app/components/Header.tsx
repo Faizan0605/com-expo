@@ -4,9 +4,11 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import { IconHome, IconMessage, IconWorldQuestion } from "@tabler/icons-react";
 import { useAuthStore } from "@/store/Auth";
 import slugify from "@/utils/slugify";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-    const { user } = useAuthStore();
+    const { user, logout } = useAuthStore();
+    const router = useRouter();
 
     const navItems = [
         {
@@ -28,9 +30,22 @@ export default function Header() {
             icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
         });
 
+    const actionItem = user
+        ? {
+              label: "Logout",
+              onClick: async () => {
+                  await logout();
+                  router.push("/");
+              },
+          }
+        : {
+              label: "Login",
+              href: "/login",
+          };
+
     return (
         <div className="relative w-full">
-            <FloatingNav navItems={navItems} />
+            <FloatingNav navItems={navItems} actionItem={actionItem} />
         </div>
     );
 }
