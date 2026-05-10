@@ -4,6 +4,7 @@ import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import { Query } from "node-appwrite";
 import React from "react";
+import { QuestionDocument } from "@/models";
 
 const LatestQuestions = async () => {
     const questions = await databases.listDocuments(db, questionCollection, [
@@ -45,7 +46,7 @@ const LatestQuestions = async () => {
     return (
         <div className="space-y-6">
             {questions.documents.map(question => (
-                <QuestionCard key={question.$id} ques={question} />
+                <QuestionCard key={question.$id} ques={question as unknown as QuestionDocument} />  
             ))}
         </div>
     );
