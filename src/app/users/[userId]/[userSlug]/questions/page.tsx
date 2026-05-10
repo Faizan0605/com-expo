@@ -3,22 +3,23 @@ import QuestionCard from "@/components/QuestionCard";
 import { answerCollection, db, questionCollection, voteCollection } from "@/models/name";
 import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
-import { Query } from "node-appwrite";
-import React from "react";
+import { Query } from "node-appwrite";import { QuestionDocument } from "@/models";
 
 const Page = async ({
     params,
     searchParams,
 }: {
-    params: { userId: string; userSlug: string };
-    searchParams: { page?: string };
+    params: Promise<{ userId: string; userSlug: string }>;        // ✅
+    searchParams: Promise<{ page?: string }>;                      // ✅
 }) => {
-    searchParams.page ||= "1";
+    const { userId } = await params;                               // ✅
+    const { page } = await searchParams;                           // ✅
+    const currentPage = page || "1";
 
     const queries = [
-        Query.equal("authorId", params.userId),
+        Query.equal("authorId", userId),
         Query.orderDesc("$createdAt"),
-        Query.offset((+searchParams.page - 1) * 25),
+        Query.offset((+currentPage - 1) * 25),
         Query.limit(25),
     ];
 
@@ -30,12 +31,12 @@ const Page = async ({
                 users.get<UserPrefs>(ques.authorId),
                 databases.listDocuments(db, answerCollection, [
                     Query.equal("questionId", ques.$id),
-                    Query.limit(1), // for optimization
+                    Query.limit(1),
                 ]),
                 databases.listDocuments(db, voteCollection, [
                     Query.equal("type", "question"),
                     Query.equal("typeId", ques.$id),
-                    Query.limit(1), // for optimization
+                    Query.limit(1),
                 ]),
             ]);
 
@@ -52,13 +53,15 @@ const Page = async ({
         })
     );
 
+    const plainQuestions = questions.documents as unknown as QuestionDocument[];  // ✅
+
     return (
         <div className="px-4">
             <div className="mb-4">
                 <p>{questions.total} questions</p>
             </div>
             <div className="mb-4 max-w-3xl space-y-6">
-                {questions.documents.map(ques => (
+                {plainQuestions.map(ques => (                      // ✅
                     <QuestionCard key={ques.$id} ques={ques} />
                 ))}
             </div>
@@ -66,5 +69,3 @@ const Page = async ({
         </div>
     );
 };
-
-export default Page;
