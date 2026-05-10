@@ -3,33 +3,36 @@ import { answerCollection, db, voteCollection, questionCollection } from "@/mode
 import { Query } from "node-appwrite";
 import React from "react";
 import Link from "next/link";
-import {ShimmerButton} from "@/components/ui/shimmer-button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Meteors } from "@/components/ui/meteors";
 import { Particles } from "@/components/ui/particles";
 import QuestionCard from "@/components/QuestionCard";
 import { UserPrefs } from "@/store/Auth";
 import Pagination from "@/components/Pagination";
 import Search from "./Search";
+import { QuestionDocument } from "@/models";
 
 const Page = async ({
     searchParams,
 }: {
-    searchParams: { page?: string; tag?: string; search?: string };
+    searchParams: Promise<{ page?: string; tag?: string; search?: string }>; // ✅
 }) => {
-    searchParams.page ||= "1";
+    const { page, tag, search } = await searchParams; // ✅
+    
+    const currentPage = page || "1"; // use destructured variable
 
     const queries = [
         Query.orderDesc("$createdAt"),
-        Query.offset((+searchParams.page - 1) * 25),
+        Query.offset((+currentPage - 1) * 25),
         Query.limit(25),
     ];
 
-    if (searchParams.tag) queries.push(Query.equal("tags", searchParams.tag));
-    if (searchParams.search)
+    if (tag) queries.push(Query.equal("tags", tag));
+    if (search)
         queries.push(
             Query.or([
-                Query.search("title", searchParams.search),
-                Query.search("content", searchParams.search),
+                Query.search("title", search),
+                Query.search("content", search),
             ])
         );
 
@@ -51,6 +54,8 @@ const Page = async ({
                 ]),
             ]);
 
+            
+
             return {
                 ...ques,
                 totalAnswers: answers.total,
@@ -64,8 +69,10 @@ const Page = async ({
         })
     );
 
+    const plainQuestions = questions.documents as unknown as QuestionDocument[];
+
     return (
-        
+
         <div className="relative isolate min-h-screen overflow-hidden bg-black">
             <div className="absolute inset-0">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_40%),linear-gradient(180deg,_rgba(10,10,10,0.98),_rgba(0,0,0,1))]" />
@@ -97,9 +104,9 @@ const Page = async ({
                         <p>{questions.total} questions</p>
                     </div>
                     <div className="mb-4 w-full space-y-6">
-                    {questions.documents.map(ques => (
-                        <QuestionCard key={ques.$id} ques={ques} />
-                    ))}
+                        {plainQuestions.map(ques => (
+                            <QuestionCard key={ques.$id} ques={ques} />
+                        ))}
                     </div>
                 </div>
             </div>
