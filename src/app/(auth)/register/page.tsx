@@ -92,17 +92,17 @@ export default function Register() {
                 <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
                     <LabelInputContainer>
                         <Label htmlFor="firstname">First name</Label>
-                        <Input className="text-black" id="firstname" name="firstname" placeholder="Tyler" type="text" />
+                        <Input className="text-black dark:text-white" id="firstname" name="firstname" placeholder="Tyler" type="text" />
                     </LabelInputContainer>
                     <LabelInputContainer>
                         <Label htmlFor="lastname">Last name</Label>
-                        <Input className="text-black"  id="lastname" name="lastname" placeholder="Durden" type="text" />
+                        <Input className="text-black dark:text-white"  id="lastname" name="lastname" placeholder="Durden" type="text" />
                     </LabelInputContainer>
                 </div>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="email">Email Address</Label>
                     <Input
-                    className="text-black" 
+                    className="text-black dark:text-white" 
                         id="email"
                         name="email"
                         placeholder="projectmayhem@fc.com"
@@ -111,7 +111,7 @@ export default function Register() {
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="password">Password</Label>
-                    <Input className="text-black"  id="password" name="password" placeholder="••••••••" type="password" />
+                    <Input className="text-black dark:text-white"  id="password" name="password" placeholder="••••••••" type="password" />
                 </LabelInputContainer>
 
                 <button
@@ -125,6 +125,7 @@ export default function Register() {
 
                 <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 
+               {/* google and github buttons
                 <div className="flex flex-col space-y-4">
                     <button
                         className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
@@ -148,7 +149,7 @@ export default function Register() {
                         </span>
                         <BottomGradient />
                     </button>
-                </div>
+                </div> */}
             </form>
         </div>
     );
