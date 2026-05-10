@@ -11,13 +11,22 @@ import { ID, Models } from "appwrite";
 import Link from "next/link";
 import React from "react";
 
+type Comment = Models.Document & {
+    content: string;
+    authorId: string;
+    author: {
+        name: string;
+        $id: string;
+    };
+};
+
 const Comments = ({
     comments: _comments,
     type,
     typeId,
     className,
 }: {
-    comments: Models.DocumentList<Models.Document>;
+    comments: Models.DocumentList<Comment>; 
     type: "question" | "answer";
     typeId: string;
     className?: string;
@@ -38,11 +47,11 @@ const Comments = ({
                 typeId: typeId,
             });
 
-            setNewComment(() => "");
+            setNewComment("");
             setComments(prev => ({
-                total: prev.total + 1,
-                documents: [{ ...response, author: user }, ...prev.documents],
-            }));
+            total: prev.total + 1,
+            documents: [{ ...response, author: user } as unknown as Comment, ...prev.documents],
+        }));
         } catch (error: any) {
             window.alert(error?.message || "Error creating comment");
         }
