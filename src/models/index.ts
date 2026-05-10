@@ -3,11 +3,14 @@ import { Models } from "appwrite";
 import { UserPrefs } from "@/store/Auth";
 
 export type QuestionDocument = Models.Document & {
-  title: string;
-  content: string;
-  authorId: string;
-  tags: string[];
-  attachmentId: string | null;
+    title: string;
+    content: string;
+    authorId: string;
+    tags: string[];
+    attachmentId: string | null;
+    totalVotes: number;       // ✅ add
+    totalAnswers: number;     // ✅ add
+    author: PublicUser;       // ✅ add
 };
 
 export type CommentDocument = Models.Document & {
